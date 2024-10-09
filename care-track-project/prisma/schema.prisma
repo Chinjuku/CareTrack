@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+model User {
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  email      String     @unique
+  password   String
+  role       UserRole   @default(PATIENT)
+  patient    Patient?
+  staff      Staff?
+}
+
+model Patient {
+  id                Int                  @id @default(autoincrement())
+  firstname         String?
+  lastname          String?
+  medicationAllocations MedicationAllocation[]
+  medicationNotifications MedicationNotification[]
+  appointments      Appointment[]
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
+}
+
+model Staff {
+  id        Int        @id @default(autoincrement())
+  firstname         String?
+  lastname          String?
+  appointments Appointment[]
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
+}
+
+model Medication {
+  id          Int                  @id @default(autoincrement())
+  med_name        String
+  dosage      String //ปริมาณ
+  frequency   Int // Number of times medication is taken per day
+  allocations  MedicationAllocation[]
+  notifications MedicationNotification[]
+}
+
+model MedicationAllocation {
+  id        Int      @id @default(autoincrement())
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  patientId Int
+  medication Medication @relation(fields: [medicationId], references: [id])
+  medicationId Int
+  startDate DateTime
+  endDate   DateTime
+}
+
+model MedicationNotification {
+  id        Int      @id @default(autoincrement())
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  patientId Int
+  medication Medication @relation(fields: [medicationId], references: [id])
+  medicationId Int
+  notificationTime DateTime
+  notified     Boolean @default(false) // Whether the notification was sent
+}
+
+model Appointment {
+  id        Int      @id @default(autoincrement())
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  patientId Int
+  staff     Staff    @relation(fields: [staffId], references: [id])
+  staffId   Int
+  title     String
+  description String?
+  appointmentTime DateTime
+}
+// Enum for user roles
+enum UserRole {
+  PATIENT
+  STAFF
+}
