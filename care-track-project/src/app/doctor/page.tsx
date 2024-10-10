@@ -13,8 +13,6 @@ import {Button} from "@nextui-org/react";
 export default function DoctorProfilePage() {
     return (
         <div className="bg-white">
-            
-
             <Card className="shadow-none">
                     
                         <CardBody className="py-2 flex flex-row gap-2">

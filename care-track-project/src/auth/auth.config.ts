@@ -3,40 +3,34 @@ import { NextResponse } from 'next/server';
 
 export const authConfig: NextAuthConfig = {
   pages: {
-    signIn: '/login', // Custom login page
+    signIn: '/login',
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      // Redirect to /protected after logging in, unless the original URL was one of the protected routes
-      if (url.startsWith(baseUrl)) {
-        const protectedRoutes = ['/protected', '/notification', '/doctor', '/activity'];
-        const targetPath = new URL(url).pathname;
-        if (protectedRoutes.some(route => targetPath.startsWith(route))) {
-          return url; // Keep the original URL if it's one of the protected routes
-        }
-        return '/protected'; // Default redirect to the protected page
-      }
-      return baseUrl; // Default redirect to base URL for external URLs
+      // If the url is already a valid path in our app, just return it
+      if (url.startsWith(baseUrl)) return url;
+      // Otherwise, redirect to the dashboard
+      return `${baseUrl}/home`;
     },
     async authorized({ auth, request }) {
       const isLoggedIn = !!auth?.user;
-      const nextUrl = request.nextUrl;
+      const { pathname } = request.nextUrl;
       const protectedRoutes = ['/protected', '/notification', '/doctor', '/activity'];
-      const isProtected = protectedRoutes.some(route => nextUrl.pathname.startsWith(route));
+      const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+      const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/register');
 
-      // If the route is protected, check if the user is logged in
-      if (isProtected) {
-        if (isLoggedIn) return true; // Allow access to protected routes
-        return NextResponse.redirect(new URL('/login', nextUrl)); // Redirect to login if not authenticated
+      if (isProtectedRoute) {
+        if (isLoggedIn) return true;
+        return NextResponse.redirect(new URL('/login', request.url));
       }
 
-      // If the user is logged in and trying to access non-protected routes, redirect to /protected
-      if (isLoggedIn && !isProtected) {
-        return NextResponse.redirect(new URL('/protected', nextUrl)); // Redirect to protected page
+      if (isAuthRoute) {
+        if (isLoggedIn) return NextResponse.redirect(new URL('/home', request.url));
+        return true;
       }
 
-      return true; // Allow access to public routes
+      return true;
     },
   },
-  providers: [], // Add providers here
+  providers: [], // Add your providers here
 };
