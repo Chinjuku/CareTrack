@@ -14,13 +14,14 @@ const LoginForm = () => {
     name='password'
     type='password'
     placeholder='password'
+    
    />
    {errorMessage && (
     <>
         <p className="text-sm text-red-500">{errorMessage}</p>
     </>
     )}
-   <button className='w-full' type='submit'>
+   <button className='text-red-500 bg-black' type='submit'>
     submit
    </button>
   </form>
