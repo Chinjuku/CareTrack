@@ -2,9 +2,9 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from './auth.config';
 import { z } from 'zod';
-// import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import prisma from '@/utils/db';
-import { User as CustomUser } from '@/types/user';
+import { LoginUser as CustomUser } from '@/types/user';
 
 // Fetch user from the database and convert id to string
 async function getUser(email: string): Promise<CustomUser | null> {
@@ -44,14 +44,12 @@ export const { auth, signIn, signOut } = NextAuth({
 
           if (!user) return null;
 
-        //   const passwordsMatch = await bcrypt.compare(password, user.password);
+          const passwordsMatch = await bcrypt.compare(password, user.password);
 
-          if (password === user.password) {
+          if (passwordsMatch) {
             return user; // Return the user with id as string
           }
         }
-
-        console.log('Invalid credentials');
         return null;
       },
     }),

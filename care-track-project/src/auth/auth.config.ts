@@ -7,16 +7,22 @@ export const authConfig: NextAuthConfig = {
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      // Always redirect to /protected after logging in
+      // Redirect to /protected after logging in, unless the original URL was one of the protected routes
       if (url.startsWith(baseUrl)) {
-        return '/protected'; // Redirect to the protected page
+        const protectedRoutes = ['/protected', '/notification', '/doctor', '/activity'];
+        const targetPath = new URL(url).pathname;
+        if (protectedRoutes.some(route => targetPath.startsWith(route))) {
+          return url; // Keep the original URL if it's one of the protected routes
+        }
+        return '/protected'; // Default redirect to the protected page
       }
       return baseUrl; // Default redirect to base URL for external URLs
     },
     async authorized({ auth, request }) {
       const isLoggedIn = !!auth?.user;
       const nextUrl = request.nextUrl;
-      const isProtected = nextUrl.pathname.startsWith('/protected');
+      const protectedRoutes = ['/protected', '/notification', '/doctor', '/activity'];
+      const isProtected = protectedRoutes.some(route => nextUrl.pathname.startsWith(route));
 
       // If the route is protected, check if the user is logged in
       if (isProtected) {
@@ -25,7 +31,7 @@ export const authConfig: NextAuthConfig = {
       }
 
       // If the user is logged in and trying to access non-protected routes, redirect to /protected
-      if (isLoggedIn) {
+      if (isLoggedIn && !isProtected) {
         return NextResponse.redirect(new URL('/protected', nextUrl)); // Redirect to protected page
       }
 
