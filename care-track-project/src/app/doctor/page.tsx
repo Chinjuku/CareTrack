@@ -2,7 +2,12 @@
 "use client";
 import {Link, Card, CardHeader, CardBody, CardFooter, Image} from "@nextui-org/react";
 import {Tabs, Tab} from "@nextui-org/react";
-
+import {Calendar} from "@nextui-org/react";
+import {parseDate} from '@internationalized/date';
+import {TimeInput} from "@nextui-org/react";
+import {Time} from "@internationalized/date";
+import {Input} from "@nextui-org/react";
+import {Button} from "@nextui-org/react";
 
 
 export default function DoctorProfilePage() {
@@ -91,7 +96,22 @@ export default function DoctorProfilePage() {
                         </Card>  
                         </Tab>
                     </Tabs>
-                </div>  
+                </div> 
+
+
+
+                <h1 className="my-5 font-medium">Bookings</h1>
+                <div className="flex w-full flex-wrap md:flex-nowrap gap-4 my-3">
+                    <Input type="date" label="Date" />
+                </div>
+
+                <div className="flex flex-wrap gap-4 my-3">
+                    <TimeInput label="Event Time" />
+                </div>
+
+                <Button color="primary">
+                    ยืนยันการจอง
+                </Button>
             
         </div>
     );

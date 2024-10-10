@@ -1,6 +1,5 @@
 // app/layout.tsx
 import { NextUIProvider } from "@nextui-org/react";
-import Navbar from "@/components/navbar/navbar";  // ใช้ alias "@/components"
 import "@/app/globals.css";  // นำเข้าไฟล์ global CSS ที่นี่
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -14,10 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen flex flex-col bg-white">
         <NextUIProvider>
-          <div className="flex-grow px-2.5"> {/* เนื้อหาหลัก */}
+          <div className="flex-grow"> {/* เนื้อหาหลัก */}
             {children}  
           </div>
-          <Navbar />  {/* แสดง Navbar ด้านล่าง */}
         </NextUIProvider>
       </body>
     </html>
