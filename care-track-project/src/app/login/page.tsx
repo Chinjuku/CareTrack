@@ -1,6 +1,6 @@
 import React from "react";
 // import { createUser, getUser } from "@/server/appointment";
-import LoginForm from "@/components/form";
+import LoginForm from "@/components/loginform";
 
 const Page = async () => {
   return (
