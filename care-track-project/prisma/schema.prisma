@@ -9,8 +9,10 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./database/dev.db"
+  // provider = "mysql"
+  // url      = env("DATABASE_URL")
 }
 
 // schema.prisma
@@ -19,7 +21,7 @@ model User {
   username   String     @unique
   email      String     @unique
   password   String
-  role       UserRole   @default(PATIENT)
+  role       String
   patient    Patient?
   staff      Staff?
 }
@@ -41,8 +43,8 @@ model Staff {
   appointments Appointment[]
   user   User @relation(fields: [userId], references: [id])
   userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
-  doctor_type String
-  price Float
+  doctor_type String?
+  price Float?
   description String?
   specification String?
   work String?
@@ -83,9 +85,4 @@ model Appointment {
   staff     Staff    @relation(fields: [staffId], references: [id])
   staffId   Int
   appointmentTime DateTime
-}
-// Enum for user roles
-enum UserRole {
-  PATIENT
-  STAFF
 }

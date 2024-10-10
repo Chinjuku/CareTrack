@@ -2,10 +2,26 @@
 "use client"
 import {Link, Card, CardBody, CardFooter, Image} from "@nextui-org/react";
 import Navbar from "@/components/navbar/navbar";  // นำเข้า NavBar ที่นี่
-
-
+import { useUser } from '@/context/UserProvider'
+import { getAllDoctor } from "@/server/user";
+import { useEffect, useState } from "react";
+import { Staff } from "@prisma/client";
 
 export default function HomePage() {
+    const user = useUser()
+    const [staffs, setStaff] = useState<Staff[]>()
+    useEffect(() => {
+        const fetchDoctors = async () => {
+          try {
+            const response = await fetch('/api/doctor');  // Fetch from API route
+            const data = await response.json();
+            setStaff(data);
+          } catch (error) {
+            console.error("Failed to fetch doctors:", error);
+          }
+        };
+        fetchDoctors();
+      }, []);
     return (
         <div className="pb-24">
             <section className="px-4">
@@ -16,7 +32,7 @@ export default function HomePage() {
                         </div>
                         <div className="flex flex-col text-black">
                             <h1 className="text-xs font-bold">Good Morning.</h1>
-                            <p className="text-xs">Username</p>
+                            <p className="text-xs">{ user?.username }</p>
                         </div>
                     </div>
 
@@ -30,7 +46,8 @@ export default function HomePage() {
                     <h1 className="text-gray-700 border-b pb-1 text-sm border-gray-700  w-fit">
                         ปรึกษาแพทย์ / หาที่ปรึกษาสุขภาพ
                     </h1>
-                    {Array.from({ length: 8 }).map((_, index) => (
+                    {/* get all doctors */}
+                    {staffs?.map((data, index) => (
                         <Card key={index} className="pt-2 pb-0 bg-white shadow-none  rounded-xl border-[1px] border-gray-200 my-4 mx-3">
                             <Link href="/home">
                                 <CardBody className="overflow-visible py-2 grid grid-cols-7 gap-2 w-full h-24">
@@ -38,7 +55,7 @@ export default function HomePage() {
                                         <img className="object-cover object-center w-full h-20" src="https://www.tidalhealth.org/sites/default/files/styles/physician_photo_focal_point_245x303_/public/site_media/2023-03/Zee-Ali-PA-C.jpg?h=da6474f4&itok=rvqkEs9F"  alt="Profile" />
                                     </div>
                                     <div className="col-span-5 flex flex-col justify-between w-full text-black">
-                                        <h1 className="text-lg uppercase font-bold">พญ. ภัทรมน เหลืองโพธิแมน</h1>
+                                        <h1 className="text-lg uppercase font-bold">{data.firstname} {data.lastname}</h1>
                                         <div className="border-[0.5px] border-gray-600 px-2 rounded-md w-fit">
                                             <p className="text-xs text-gray-600">General Health</p>
                                         </div>

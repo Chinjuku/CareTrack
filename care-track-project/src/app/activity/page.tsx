@@ -23,7 +23,7 @@ export default function ActivityPage() {
     
         <Accordion variant="splitted" showDivider={false}  className="">
           {Array.from({ length: 8 }).map((_, index) => (
-            <AccordionItem className="bg-white  rounded-3xl -mx-2 px-2 py-0 mb-3"
+            <AccordionItem key={index} className="bg-white  rounded-3xl -mx-2 px-2 py-0 mb-3"
               startContent={
                 <div className="">
                   <div className="flex relative justify-between items-center gap-4">

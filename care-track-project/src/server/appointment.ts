@@ -1,2 +1,2 @@
-"use server"
-import prisma from "@/utils/db"
+// "use server"
+// import prisma from "@/utils/db"
