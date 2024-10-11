@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./database/dev.db"
+  url      = "file:./database/dev.db?timeout=5000"
   // provider = "mysql"
   // url      = env("DATABASE_URL")
 }

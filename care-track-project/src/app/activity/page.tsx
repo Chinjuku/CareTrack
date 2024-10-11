@@ -4,46 +4,50 @@ import {Accordion, AccordionItem} from "@nextui-org/react";
 import {Tabs, Tab, Card, CardBody} from "@nextui-org/react";
 import {Divider} from "@nextui-org/divider";
 import Navbar from "@/components/navbar/navbar";  // นำเข้า NavBar ที่นี่
-
-
+import { useEffect, useState } from "react";
+import { useUser } from "@/context/UserProvider";
+import { MedicationAllocation } from "@/types/models";
+import { viewMedicines } from "@/server/medication";
 
 export default function ActivityPage() {
+  const [medicine_allos, setMeds] = useState<MedicationAllocation[] | undefined>([])
+  const user = useUser()
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user?.patient?.id) {
+        const medicines = await viewMedicines(user?.patient?.id)
+        setMeds(medicines)
+      }
+    }
+    fetchData()
+  }, [user])
+  console.log(medicine_allos)
   return (
     <div className="pb-24">
       <section className="px-4">
-
-      
         <div className="rounded-b-3xl px-3 py-3 mb-3">
           <div className="flex gap-3 h-10 items-center my-3">
             <h1 className="text-3xl text-black font-medium">Activity</h1>
           </div>
         </div>
-
-
-    
         <Accordion variant="splitted" showDivider={false}  className="">
-          {Array.from({ length: 8 }).map((_, index) => (
+          {medicine_allos ? medicine_allos.map((med, index) => (
             <AccordionItem key={index} className="bg-white  rounded-3xl -mx-2 px-2 py-0 mb-3"
               startContent={
                 <div className="">
                   <div className="flex relative justify-between items-center gap-4">
-                    
                     <div className="w-20 h-20 overflow-hidden rounded-full border border-[#86CBE9]">
-                      
                       <svg className="w-full h-full p-4 text-[#86CBE9]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                       <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z"/>
                       </svg>
-
-                      
                     </div>
-                    
                     <div className="text-black text-start">
-                      <h1>โรงพยาบาลศิริกิตบร่าๆๆๆๆ</h1>
+                      <h1>จ่ายยาครั้งที่ { med.id }</h1>
                       <div className="flex items-center">
                         <svg className="w-4 h-4 text-[#86CBE9]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" d="M5 5a1 1 0 0 0 1-1 1 1 0 1 1 2 0 1 1 0 0 0 1 1h1a1 1 0 0 0 1-1 1 1 0 1 1 2 0 1 1 0 0 0 1 1h1a1 1 0 0 0 1-1 1 1 0 1 1 2 0 1 1 0 0 0 1 1 2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a2 2 0 0 1 2-2ZM3 19v-7a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Zm6.01-6a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm2 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm6 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm-10 4a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm6 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm2 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z" clip-rule="evenodd"/>
                         </svg>
-                        <p className="text-xs">22 / 03 / 2024</p>
+                        <p className="text-xs">{ med.time_stamp.toDateString() }</p>
                       </div>
                     </div>
                   </div>
@@ -55,27 +59,21 @@ export default function ActivityPage() {
                     <Card className="border-0 shadow-none bg-none rounded-none bg-transparent p-0">
                       <CardBody className="py-3 pb-8 border-0 bg-none p-0">
                       
-                        {Array.from({ length: 3 }).map((_, index) => (
+                        {med.medicine ? med.medicine.map((med_count, index) => (
                           <div key={index}>
                             <section className="bg-white border border-gray-300 rounded-2xl px-4 py-3 pb-5 mb-6">
-                              <h1 className="text-lg font-medium">Fasuluea Medanine</h1> 
-                              <p className="text-xl text-gray-500">รับประทาน <span className="text-2xl font-semibold text-gray-600">2</span> แคปซูล</p>
+                              <h1 className="text-lg font-medium">{med_count.medicine_name}</h1> 
+                              <p className="text-xl text-gray-500">รับประทาน <span className="text-2xl font-semibold text-gray-600">{ med_count.dosage }</span> แคปซูล</p>
                               <div className="flex gap-1 mt-3">
-                                  <div className="w-24 px-2 rounded-lg bg-[#E0F1EE]">
-                                    <p className="text-[#69BBAC] text-xs py-1 w-full text-nowrap">หลัง อาหารเที่ยง</p>
-                                  </div>
-
-                                  <div className="w-24 px-2 rounded-lg bg-[#E0F1EE]">
-                                    <p className="text-[#69BBAC] text-xs py-1 w-full text-nowrap">หลัง อาหารเที่ยง</p>
-                                  </div>
-
-                                  <div className="w-24 px-2 rounded-lg bg-[#E0F1EE]">
-                                    <p className="text-[#69BBAC] text-xs py-1 w-full text-nowrap">หลัง อาหารเที่ยง</p>
-                                  </div>
+                              { med_count.period.map((period, indexs) => (
+                                <div key={indexs} className="w-24 px-2 rounded-lg bg-[#E0F1EE]">
+                                  <p className="text-[#69BBAC] text-xs py-1 w-full text-nowrap">{period.period_name}</p>
+                                </div>
+                              ))}                                 
                               </div>
                             </section>
                           </div>
-                        ))}
+                        )) : <></>}
                       </CardBody>
                     </Card>  
                   </Tab>
@@ -92,7 +90,7 @@ export default function ActivityPage() {
                             <h1 className="font-semibold">Health Rate</h1>
                             <p className="text-xs">Your Health Rate is<br></br>Normal</p>
 
-                            <h1 className="text-2xl font-semibold py-3">74<span className="text-xs font-normal ml-2">bpms</span></h1>
+                            <h1 className="text-2xl font-semibold py-3">{med.heart_rate}<span className="text-xs font-normal ml-2">bpms</span></h1>
                           </div>
 
                           <div className="border border-gray-300 w-1/2 px-3 py-2 rounded-xl">
@@ -104,7 +102,7 @@ export default function ActivityPage() {
                             <h1 className="font-semibold">Hemoglobin</h1>
                             <p className="text-xs">Your hemoglobin<br></br>level is <span>Normal</span></p>
 
-                            <h1 className="text-2xl font-semibold py-3">121/80<span className="text-xs font-normal ml-2">mmHg</span></h1>
+                            <h1 className="text-2xl font-semibold py-3">{med.hemoglobin}<span className="text-xs font-normal ml-2">mmHg</span></h1>
                           </div>
                         </div>
                       </CardBody>
@@ -113,7 +111,7 @@ export default function ActivityPage() {
                 </Tabs>
               </div>  
             </AccordionItem>
-          ))}
+          )): <></>}
       </Accordion>
     </section>
   

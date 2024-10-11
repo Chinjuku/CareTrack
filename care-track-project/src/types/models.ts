@@ -56,27 +56,31 @@ export type Patient = {
   export type MedicationAllocation = {
     id: number;
     patientId: number;
-    patient: Patient;
     time_stamp: Date;
     notified: boolean;
-    medicine: Medicine[];
+    medicine: ViewMedicine[];
     heart_rate: number;
     hemoglobin: number;
+  };
+
+  export type ViewMedicine = {
+    id: number;
+    medicine_name: string;
+    dosage: number;
+    med_allocationId: number
+    period: Period[]
   };
   
   export type Medicine = {
     id: number;
-    medicine_name: string;
+    med_name: string;
     dosage: number;
-    med_allocationId: number;
   };
   
   export type Period = {
     id: number;
     period_name: string;
     time: Date;
-    medicineId: number;
-    medicine: Medicine;
   };
   
   export type Appointment = {

@@ -1,42 +1,75 @@
 "use server"
+import { MedicineForm } from '@/types/form.type';
+import { Medicine } from '@/types/models';
 import prisma from '@/utils/db'
 
-export const createMedication = async (
-    patientId: number,
-    heart_rate: number,
-    hemoglobin: number,
-    med_name: string,
-    dosage: number,
-    periodIds: number[]
-) => {
+export const createMedication = async ({
+    patientId,
+    heart_rate,
+    hemoglobin,
+    medicines,
+  }: {
+    patientId: number;
+    heart_rate: number;
+    hemoglobin: number;
+    medicines: MedicineForm[];
+  }) => {
     try {
-            const med_allo = await prisma.medicationAllocation.create({
-                data: {
-                    patientId: patientId,
-                    heart_rate: heart_rate,
-                    hemoglobin: hemoglobin,
-                    notified: false,
-                    medicine: {
-                        create: {
-                            medicine_name: med_name,
-                            dosage: dosage,
-                            period: {
-                                connect: periodIds.map((id) => ({ id: id })),
-                            },
-                        },
+        // Step 1: Create the medicines without connecting periods
+        const med_allo = await prisma.medicationAllocation.create({
+            data: {
+                patientId: patientId,
+                heart_rate: heart_rate,
+                hemoglobin: hemoglobin,
+                notified: false,
+                medicine: {
+                    createMany: {
+                        data: medicines.map(med => ({
+                            medicine_name: med.med_name,
+                            dosage: parseInt(med.dosage),
+                        })),
                     },
                 },
-                include: {
-                    medicine: {
-                        include: {
-                            period: true,
-                        },
+            },
+            include: {
+                medicine: {
+                    include: {
+                        period: true,
                     },
+                },
+            },
+        });
+
+        // // Step 2: Update each created medicine to connect periods
+        for (const med of medicines) {
+            // Get the created medicine based on some unique criteria (like name or other fields)
+            const createdMedicine = await prisma.medicine.findFirst({
+                where: {
+                    med_allocationId: med_allo.id,
+                    medicine_name: med.med_name,
                 },
             });
+            console.log(createdMedicine)
+            if (createdMedicine) {
+                const timestampsArray = Array.from(med.timestamps).map((id: number) => ({ id: parseInt(id) }));
+                // Step 3: Update the created medicine to connect the periods
+                const update = await prisma.medicine.update({
+                    where: { id: createdMedicine.id },
+                    data: {
+                        period: {
+                            connect: timestampsArray, // Connect the periods
+                        },
+                    },
+                    include: {
+                        period: true
+                    }
+                });
+                console.log(update)
+            }
+        }
         return { success: true, medicationAllocation: med_allo };
     } catch (error) {
-        console.error('Error creating medication:', error);
+        console.log('Error creating medication:', error);
         return { success: false, error: 'Failed to create medication' };
     }
 };
@@ -49,4 +82,24 @@ export const createPeriod = async () => {
         },
     });
     return creates
+}
+
+export const viewPeriod = async () => {
+    return await prisma.period.findMany();
+}
+
+export const viewMedicines = async (patientId: number) => {
+    const medicines = prisma.medicationAllocation.findMany({
+        where: {
+            patientId: patientId
+        },
+        include: {
+            medicine: {
+                include: {
+                    period: true
+                }
+            }
+        }
+    })
+    return medicines
 }
