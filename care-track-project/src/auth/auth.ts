@@ -4,7 +4,7 @@ import { authConfig } from './auth.config';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import prisma from '@/utils/db';
-import { LoginUser as CustomUser } from '@/types/user';
+import { LoginUser as CustomUser } from '@/types/models';
 
 // Fetch user from the database and convert id to string
 async function getUser(email: string): Promise<CustomUser | null> {

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext } from 'react'
-import { User } from '@/types/user'
+import { User } from '@/types/models'
 
 const UserContext = createContext<User | null>(null)
 

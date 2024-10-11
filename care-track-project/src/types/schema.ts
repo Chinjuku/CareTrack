@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserRoles } from './user';
+import { UserRoles } from '@/types/models';
 
 export const registerSchema = z.object({
     username: z.string().min(1, "Username is required"),

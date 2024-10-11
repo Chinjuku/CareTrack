@@ -21,3 +21,23 @@ export const viewAppointments = async (patientId: number) => {
     })
     return appoints
 }
+
+export const updateAppointment = async (
+    appointmentTime : Date,
+    id: number
+) => {
+    try {
+        const updateAppointment = await prisma.appointment.update({
+            where : {
+                id : id
+            },
+            data: {
+                appointmentTime: appointmentTime
+            }
+        }) 
+        return { success: true, appointment: updateAppointment }
+    } catch (error) {
+        console.error('Error creating medication:', error);
+        return { success: false, error: 'Failed to create medication' };
+    }
+}
