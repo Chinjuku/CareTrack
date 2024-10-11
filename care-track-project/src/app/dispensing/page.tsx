@@ -2,8 +2,8 @@
 "use client";
 import { Input } from "@nextui-org/react";
 import React from "react";
-import { useEffect, useState } from "react";
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
+import { useState } from "react";
+import {Button} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 
 export default function HospitalPage() {

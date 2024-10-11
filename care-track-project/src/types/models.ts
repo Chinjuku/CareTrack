@@ -68,9 +68,7 @@ export type Patient = {
     id: number;
     medicine_name: string;
     dosage: number;
-    period: Period[];
     med_allocationId: number;
-    medication_allocation: MedicationAllocation;
   };
   
   export type Period = {

@@ -1,7 +1,7 @@
 "use server";
 
 import { registerSchema } from "@/types/schema";
-import { UserRoles } from "@/types/user";
+import { UserRoles } from "@/types/models";
 import prisma from "@/utils/db";
 import { hash } from "bcrypt";
 import { ZodError } from "zod";
@@ -54,6 +54,11 @@ export async function createUser(formData: FormData) {
                     firstname: validatedData.firstname,
                     lastname: validatedData.lastname,
                     userId: newuser.id,
+                    doctor_type: "", // Set to null if not provided
+                    price: 0,             // Set to null if not provided
+                    description: "", // Set to null if not provided
+                    specification: "", // Set to null if not provided
+                    work: "",               // Set to null if not provided
                 },
             });
         }

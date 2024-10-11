@@ -65,7 +65,7 @@ model Medicine {
   id        Int      @id @default(autoincrement())
   medicine_name String
   dosage      Int // ปริมาณ
-  period    Period[]
+  period    Period[] @relation("MedicinePeriods")
   medication_allocation  MedicationAllocation @relation(fields: [med_allocationId], references: [id])
   med_allocationId Int
 }
@@ -74,8 +74,7 @@ model Period {
   id          Int      @id @default(autoincrement())
   period_name String
   time        DateTime
-  medicine  Medicine @relation(fields: [medicineId], references: [id])
-  medicineId Int
+  medicines   Medicine[] @relation("MedicinePeriods")
 }
 
 model Appointment {
