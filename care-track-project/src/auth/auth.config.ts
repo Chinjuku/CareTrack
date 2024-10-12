@@ -15,7 +15,11 @@ export const authConfig: NextAuthConfig = {
     async authorized({ auth, request }) {
       const isLoggedIn = !!auth?.user;
       const { pathname } = request.nextUrl;
-      const protectedRoutes = ['/protected', '/notification', '/doctor', '/activity'];
+      const protectedRoutes = [
+        '/protected', '/notification', '/doctor', 
+        '/activity', '/consult', '/dispensing',
+        '/doctor/[id]', '/home'
+      ];
       const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
       const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/register');
 

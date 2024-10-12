@@ -1,6 +1,6 @@
 import { logout } from '@/lib/actions';
 
-const LogoutForm = () => {
+const Logout = () => {
  
  return (
   <form
@@ -14,4 +14,4 @@ const LogoutForm = () => {
  );
 };
 
-export default LogoutForm;
+export default Logout;

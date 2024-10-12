@@ -51,7 +51,7 @@ export default function HomePage() {
                     {
                         loading ? <div>loading</div> : staffs?.map((data, index) => (
                             <Card key={index} className="pt-2 pb-0 bg-white shadow-none  rounded-xl border-[1px] border-gray-200 my-4 mx-3">
-                                <Link href="/home">
+                                <Link href={`/doctor/${data.id}`}>
                                     <CardBody className="overflow-visible py-2 grid grid-cols-7 gap-2 w-full h-24">
                                         <div className="col-span-2 overflow-hidden rounded-xl w-[80px] h-[80px]">
                                             <img className="object-cover object-center w-full h-20" src="https://www.tidalhealth.org/sites/default/files/styles/physician_photo_focal_point_245x303_/public/site_media/2023-03/Zee-Ali-PA-C.jpg?h=da6474f4&itok=rvqkEs9F"  alt="Profile" />

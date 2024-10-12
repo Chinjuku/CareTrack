@@ -1,4 +1,7 @@
-import LogoutForm from '@/components/logout'
+import Logout from '@/components/logout'
+import { createAppointment } from '@/server/appointment'
+import { createPeriod } from '@/server/medication'
+import { getSelectDoctor } from '@/server/user'
 
 
 const Page = async () => {
@@ -19,9 +22,11 @@ const Page = async () => {
     // const viewApp = await viewAppointments(1)
     // console.log(viewApp)
 // กรอกข้อมูลหมอ
+//  const viewApp = await getSelectDoctor(1)
+//     console.log(viewApp)
   return (
     <div>
-        <LogoutForm />
+        <Logout />
     </div>
   )
 }

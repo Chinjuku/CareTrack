@@ -3,25 +3,25 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createUser } from "@/server/register"
+import { toast } from "react-toastify"
 
 export default function RegisterForm() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [successMessage, setSuccessMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setErrors({})
-    setSuccessMessage("")
     setIsSubmitting(true)
 
     const formData = new FormData(e.currentTarget)
     try {
       await createUser(formData)
-      setSuccessMessage("User created successfully!")
+      toast.success("User created successfully!")
       setTimeout(() => router.push("/login"), 2000) // Redirect after 2 seconds
-    } catch (err: any) {
+    } catch (err) {
+      // @ts-ignore
       const errorMessages = err.message.split(", ")
       const newErrors: { [key: string]: string } = {}
 
@@ -158,12 +158,6 @@ export default function RegisterForm() {
               </button>
             </div>
           </form>
-
-          {successMessage && (
-            <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-              {successMessage}
-            </div>
-          )}
         </div>
       </div>
     </div>

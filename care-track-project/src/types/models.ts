@@ -46,11 +46,11 @@ export type Patient = {
     appointments: Appointment[];
     userId: number;
     user: User;
-    doctor_type?: string | null;
-    price?: number | null;
-    description?: string | null;
-    specification?: string | null;
-    work?: string | null;
+    doctor_type: string | null;
+    price: number | null;
+    description: string | null;
+    specification: string | null;
+    work: string | null;
   };
   
   export type MedicationAllocation = {
@@ -92,3 +92,9 @@ export type Patient = {
     appointmentTime: Date;
   };
   
+  export type QueryMedicine = {
+    id: number;
+    medicine_name: string;
+    dosage: number;
+    period: Period[]
+  };

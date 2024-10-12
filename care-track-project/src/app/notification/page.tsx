@@ -4,7 +4,9 @@ import Navbar from "@/components/navbar/navbar"; // นำเข้า NavBar �
 import { viewMedicines } from "@/server/medication";
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserProvider";
-import { MedicationAllocation} from "@/types/models"; 
+import { MedicationAllocation, QueryMedicine} from "@/types/models"; 
+import { Medicine } from "@/types/models";
+import { Period } from "@prisma/client";
 
 export default function NotificationPage() {
   const [medicine_allos, setMeds] = useState<
@@ -33,8 +35,8 @@ export default function NotificationPage() {
             </div>
           </div>
           {/* <h1>{user?.patient?.id}</h1> */}
-          {medicine_allos?.map((med: any, index: number) =>
-            med.medicine?.map((medicine: any) => (
+          {medicine_allos?.map((med: MedicationAllocation, index: number) =>
+            med.medicine?.map((medicine: QueryMedicine) => (
               <div
                 key={medicine.id}
                 className="bg-white rounded-3xl mx-3 px-4 py-6 mb-5 shadow-md relative"
@@ -63,7 +65,7 @@ export default function NotificationPage() {
                 </div>
                 <div className="flex gap-1 mt-3">
                   {medicine.period ? (
-                    medicine.period.map((p: any, index: number) => (
+                    medicine.period.map((p: Period, index: number) => (
                       <div className="w-24 px-2 rounded-lg bg-[#E0F1EE]">
                         <p className="text-[#69BBAC] text-xs py-1 w-full text-nowrap">
                           {p.period_name}

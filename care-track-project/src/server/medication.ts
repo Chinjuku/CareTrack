@@ -77,8 +77,8 @@ export const createMedication = async ({
 export const createPeriod = async () => {
     const creates = await prisma.period.create({
         data: {
-            period_name: "เช้า",
-            time: new Date('1970-01-01T08:00:00.000Z')
+            period_name: "เย็น",
+            time: new Date('1970-01-01T18:00:00.000Z')
         },
     });
     return creates

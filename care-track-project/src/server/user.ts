@@ -19,6 +19,14 @@ export const getUser = async (email: string) => {
     }
 };
 
+export const getSelectDoctor = async (doctorId: number) => {
+    return await prisma.staff.findFirst({
+        where: {
+            id: doctorId
+        }
+    })
+}
+
 export const getAllDoctor = async () => {
     return await prisma.staff.findMany()
 }

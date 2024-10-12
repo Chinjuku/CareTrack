@@ -2,21 +2,25 @@
 import prisma from "@/utils/db"
 
 export const createAppointment = async (patientId: number, staffId: number, datetime: Date) => {
-    const appoint = await prisma.appointment.create({
-        data: {
-            patientId: patientId,
-            staffId: staffId,
-            appointmentTime: datetime
-        }
-    })
-
-    return { success: true, user: appoint };
+    try {
+        const appoint = await prisma.appointment.create({
+            data: {
+                patientId: patientId,
+                staffId: staffId,
+                appointmentTime: datetime
+            }
+        })
+        return { success: true, user: appoint };
+    } catch (error) {
+        console.error('Error creating medication:', error);
+        return { success: false, error: 'Failed to create medication' };
+    }
 }
 
-export const viewAppointments = async (patientId: number) => {
+export const viewAppointments = async (staffId: number) => {
     const appoints = await prisma.appointment.findMany({
         where: {
-            patientId: patientId,
+            staffId
         }
     })
     return appoints

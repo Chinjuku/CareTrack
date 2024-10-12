@@ -2,6 +2,8 @@
 
 import { AuthError } from 'next-auth';
 import { signIn, signOut } from '@/auth/auth';
+import { redirect } from 'next/navigation';
+
 
 export async function authenticate(
     prevState: string | undefined,
@@ -24,4 +26,5 @@ export async function authenticate(
 
 export async function logout() {
     await signOut();
+    return redirect("/login")
 }

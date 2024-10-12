@@ -9,6 +9,8 @@ import { MedicineForm } from "@/types/form.type";
 import { createMedication } from "@/server/medication"; // Import the server action
 import { viewPeriod } from "@/server/medication";
 import { Period } from "@/types/models";
+import { toast } from "react-toastify";
+import Navbar from "@/components/navbar/navbar";
 
 export default function HospitalPage() {
   const user = useUser();
@@ -20,15 +22,6 @@ export default function HospitalPage() {
     { id: Date.now(), med_name: "", dosage: 0, timestamps: [] }
   ]);
   const [successMessage, setSuccessMessage] = useState("");
-
-  // const timestamps = [
-  //   { key: "ก่อนอาหารเช้า", label: "ก่อน อาหารเช้า" },
-  //   { key: "ก่อนอาหารกลางวัน", label: "ก่อน อาหารกลางวัน" },
-  //   { key: "ก่อนอาหารเย็น", label: "ก่อน อาหารเย็น" },
-  //   { key: "หลังอาหารเช้า", label: "หลัง อาหารเช้า" },
-  //   { key: "หลังอาหารกลางวัน", label: "หลัง อาหารกลางวัน" },
-  //   { key: "หลังอาหารเย็น", label: "หลัง อาหารเย็น" }
-  // ];
 
   const addMedicine = () => {
     setMedicines([
@@ -79,9 +72,8 @@ export default function HospitalPage() {
       });
 
       if (result.success) {
-        console.log("Medication created:", result.medicationAllocation);
-        setSuccessMessage("Medication created successfully!"); // Set success message
-        // Reset form data
+        // console.log("Medication created:", result.medicationAllocation);
+        toast.success("Create Allocation Successfully")
         setPatientId("");
         setHeartRate("");
         setHemoglobin("");
@@ -208,6 +200,7 @@ export default function HospitalPage() {
           </section>
         </section>
       </form>
+      <Navbar />
     </div>
   );
 }
