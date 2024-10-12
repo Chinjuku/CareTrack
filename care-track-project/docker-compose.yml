@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  nextjs:
+    build: .
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=yourpassword
+      - MYSQL_DB=yourdatabase
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+    networks:
+      - mynetwork
+
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: yourpassword    # Ensure passwords and other environment variables are consistent
+      MYSQL_DATABASE: yourdatabase         # Consistent database name
+      MYSQL_USER: root                     # Make sure user matches what is used
+      MYSQL_PASSWORD: yourpassword         # Ensure this matches
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"  # Expose the MySQL port to allow external connections if needed
+    networks:
+      - mynetwork
+
+volumes:
+  dbdata:
+    driver: local
+
+networks:
+  mynetwork:
+    driver: bridge  # Explicitly define the network driver, which is bridge by default

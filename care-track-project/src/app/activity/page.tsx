@@ -2,7 +2,6 @@
 "use client";
 import {Accordion, AccordionItem} from "@nextui-org/react";
 import {Tabs, Tab, Card, CardBody} from "@nextui-org/react";
-import {Divider} from "@nextui-org/divider";
 import Navbar from "@/components/navbar/navbar";  // นำเข้า NavBar ที่นี่
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserProvider";

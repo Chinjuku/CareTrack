@@ -1,6 +1,5 @@
 import LogoutForm from '@/components/logout'
-import { createAppointment, viewAppointments } from '@/server/appointment'
-import { createMedication, createPeriod } from '@/server/medication'
+
 
 const Page = async () => {
     // Test Create

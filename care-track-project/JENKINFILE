@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    // Pull the latest code
+                    git 'https://github.com/your-repo/care-track-project.git'
+                }
+                // Build the Docker image
+                sh 'docker-compose -f docker-compose.yml build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // รัน unit tests หรือ linting เพื่อทดสอบโค้ด
+                sh 'npm run test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // รัน docker-compose up เพื่อ deploy แอป
+                sh 'docker-compose -f docker-compose.yml up -d'
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 // app/home/page.tsx
 "use client"
-import {Link, Card, CardBody, CardFooter, Image} from "@nextui-org/react";
+import {Link, Card, CardBody, CardFooter} from "@nextui-org/react";
 import Navbar from "@/components/navbar/navbar";  // นำเข้า NavBar ที่นี่
 import { useUser } from '@/context/UserProvider'
 import { useEffect, useState } from "react";

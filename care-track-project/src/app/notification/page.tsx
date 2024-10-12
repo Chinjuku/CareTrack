@@ -1,19 +1,10 @@
 // app/notification/page.tsx
 "use client";
-import { Accordion, AccordionItem } from "@nextui-org/react";
-import {
-  Link,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Image,
-} from "@nextui-org/react";
 import Navbar from "@/components/navbar/navbar"; // นำเข้า NavBar ที่นี่
 import { viewMedicines } from "@/server/medication";
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserProvider";
-import { MedicationAllocation } from "@/types/models";
+import { MedicationAllocation} from "@/types/models"; 
 
 export default function NotificationPage() {
   const [medicine_allos, setMeds] = useState<

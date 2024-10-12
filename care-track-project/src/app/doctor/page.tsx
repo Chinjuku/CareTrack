@@ -1,11 +1,10 @@
 // app/home/page.tsx
 "use client";
-import {Link, Card, CardHeader, CardBody, CardFooter, Image} from "@nextui-org/react";
+import {Card, CardBody} from "@nextui-org/react";
 import {Tabs, Tab} from "@nextui-org/react";
-import {Calendar} from "@nextui-org/react";
-import {parseDate} from '@internationalized/date';
+
 import {TimeInput} from "@nextui-org/react";
-import {Time} from "@internationalized/date";
+
 import {Input} from "@nextui-org/react";
 import {Button} from "@nextui-org/react";
 

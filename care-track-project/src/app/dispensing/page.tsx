@@ -21,14 +21,14 @@ export default function HospitalPage() {
   ]);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const timestamps = [
-    { key: "ก่อนอาหารเช้า", label: "ก่อน อาหารเช้า" },
-    { key: "ก่อนอาหารกลางวัน", label: "ก่อน อาหารกลางวัน" },
-    { key: "ก่อนอาหารเย็น", label: "ก่อน อาหารเย็น" },
-    { key: "หลังอาหารเช้า", label: "หลัง อาหารเช้า" },
-    { key: "หลังอาหารกลางวัน", label: "หลัง อาหารกลางวัน" },
-    { key: "หลังอาหารเย็น", label: "หลัง อาหารเย็น" }
-  ];
+  // const timestamps = [
+  //   { key: "ก่อนอาหารเช้า", label: "ก่อน อาหารเช้า" },
+  //   { key: "ก่อนอาหารกลางวัน", label: "ก่อน อาหารกลางวัน" },
+  //   { key: "ก่อนอาหารเย็น", label: "ก่อน อาหารเย็น" },
+  //   { key: "หลังอาหารเช้า", label: "หลัง อาหารเช้า" },
+  //   { key: "หลังอาหารกลางวัน", label: "หลัง อาหารกลางวัน" },
+  //   { key: "หลังอาหารเย็น", label: "หลัง อาหารเย็น" }
+  // ];
 
   const addMedicine = () => {
     setMedicines([

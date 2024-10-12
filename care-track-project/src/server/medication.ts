@@ -1,6 +1,6 @@
 "use server"
 import { MedicineForm } from '@/types/form.type';
-import { Medicine } from '@/types/models';
+
 import prisma from '@/utils/db'
 
 export const createMedication = async ({
