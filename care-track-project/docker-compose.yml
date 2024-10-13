@@ -1,35 +1,33 @@
-version: '3'
+version: '3.8'
 
 services:
   nextjs:
     build: .
     environment:
-      - MYSQL_HOST=mysql
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=yourpassword
-      - MYSQL_DB=yourdatabase
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=yourpassword
+      - POSTGRES_DB=yourdatabase
     volumes:
       - .:/app
-      - /app/node_modules
     depends_on:
-      - mysql
+      - postgres
     ports:
       - "3000:3000"
     networks:
       - mynetwork
 
-  mysql:
-    image: mysql:8
+  postgres:
+    image: postgres:13
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: yourpassword    # Ensure passwords and other environment variables are consistent
-      MYSQL_DATABASE: yourdatabase         # Consistent database name
-      MYSQL_USER: root                     # Make sure user matches what is used
-      MYSQL_PASSWORD: yourpassword         # Ensure this matches
+      POSTGRES_PASSWORD: yourpassword    # Ensure passwords and other environment variables are consistent
+      POSTGRES_DB: yourdatabase          # Consistent database name
+      POSTGRES_USER: root                # Make sure user matches what is used
     volumes:
-      - dbdata:/var/lib/mysql
+      - dbdata:/var/lib/postgresql/data
     ports:
-      - "3306:3306"  # Expose the MySQL port to allow external connections if needed
+      - "5432:5432"  # Expose the PostgreSQL port to allow external connections if needed
     networks:
       - mynetwork
 

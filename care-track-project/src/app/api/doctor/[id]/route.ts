@@ -10,7 +10,7 @@ export async function GET(
       const doctor = await getSelectDoctor(parseInt(id));
       // console.log(doctor)
       return NextResponse.json(doctor);
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Failed to fetch doctor' },
         { status: 500 }

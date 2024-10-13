@@ -1,7 +1,7 @@
 import Logout from '@/components/logout'
-import { createAppointment } from '@/server/appointment'
-import { createPeriod } from '@/server/medication'
-import { getSelectDoctor } from '@/server/user'
+// import { createAppointment } from '@/server/appointment'
+// import { createPeriod } from '@/server/medication'
+// import { getSelectDoctor } from '@/server/user'
 
 
 const Page = async () => {

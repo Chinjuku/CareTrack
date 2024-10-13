@@ -21,8 +21,7 @@ export default function RegisterForm() {
       toast.success("User created successfully!")
       setTimeout(() => router.push("/login"), 2000) // Redirect after 2 seconds
     } catch (err) {
-      // @ts-ignore
-      const errorMessages = err.message.split(", ")
+      const errorMessages = (err as { message: string }).message.split(", ")
       const newErrors: { [key: string]: string } = {}
 
       errorMessages.forEach((error: string) => {

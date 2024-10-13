@@ -1,12 +1,12 @@
 "use client"
 import Navbar from "@/components/navbar/navbar";
-import { getSelectDoctor } from "@/server/user";
 import { Staff } from "@/types/models";
 import { Card, CardBody, Tabs, Tab, Input, Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserProvider";
 import { createAppointment } from "@/server/appointment";
 import { toast } from "react-toastify";
+
 
 export default function DoctorProfilePage({
   params,

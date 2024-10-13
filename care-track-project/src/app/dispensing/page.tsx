@@ -21,7 +21,7 @@ export default function HospitalPage() {
   const [medicines, setMedicines] = useState<MedicineForm[]>([
     { id: Date.now(), med_name: "", dosage: 0, timestamps: [] }
   ]);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage] = useState("");
 
   const addMedicine = () => {
     setMedicines([

@@ -26,7 +26,7 @@ export const createMedication = async ({
                     createMany: {
                         data: medicines.map(med => ({
                             medicine_name: med.med_name,
-                            dosage: parseInt(med.dosage),
+                            dosage: parseInt(med.dosage.toString()),
                         })),
                     },
                 },
@@ -51,7 +51,7 @@ export const createMedication = async ({
             });
             console.log(createdMedicine)
             if (createdMedicine) {
-                const timestampsArray = Array.from(med.timestamps).map((id: number) => ({ id: parseInt(id) }));
+                const timestampsArray = Array.from(med.timestamps).map((id: number) => ({ id: parseInt(id.toString()) }));
                 // Step 3: Update the created medicine to connect the periods
                 const update = await prisma.medicine.update({
                     where: { id: createdMedicine.id },

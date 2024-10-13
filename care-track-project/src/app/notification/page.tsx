@@ -5,7 +5,6 @@ import { viewMedicines } from "@/server/medication";
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserProvider";
 import { MedicationAllocation, QueryMedicine} from "@/types/models"; 
-import { Medicine } from "@/types/models";
 import { Period } from "@prisma/client";
 
 export default function NotificationPage() {
@@ -35,7 +34,7 @@ export default function NotificationPage() {
             </div>
           </div>
           {/* <h1>{user?.patient?.id}</h1> */}
-          {medicine_allos?.map((med: MedicationAllocation, index: number) =>
+          {medicine_allos?.map((med: MedicationAllocation) =>
             med.medicine?.map((medicine: QueryMedicine) => (
               <div
                 key={medicine.id}
@@ -65,8 +64,8 @@ export default function NotificationPage() {
                 </div>
                 <div className="flex gap-1 mt-3">
                   {medicine.period ? (
-                    medicine.period.map((p: Period, index: number) => (
-                      <div className="w-24 px-2 rounded-lg bg-[#E0F1EE]">
+                    medicine.period.map((p: Period) => (
+                      <div className="w-24 px-2 rounded-lg bg-[#E0F1EE]" key={p.id}>
                         <p className="text-[#69BBAC] text-xs py-1 w-full text-nowrap">
                           {p.period_name}
                         </p>

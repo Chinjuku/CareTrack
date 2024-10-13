@@ -1,9 +1,9 @@
 'use client'
 
 import React, { createContext, useContext } from 'react'
-import { User } from '@/types/models'
+import { UserLogin } from '@/types/user.type'
 
-const UserContext = createContext<User | null>(null)
+const UserContext = createContext<UserLogin | null>(null)
 
 export const useUser = () => {
   const context = useContext(UserContext)
@@ -13,7 +13,7 @@ export const useUser = () => {
   return context
 }
 
-export function UserProvider({ user, children }: { user: User | null; children: React.ReactNode }) {
+export function UserProvider({ user, children }: { user: UserLogin | null; children: React.ReactNode }) {
   return (
     <UserContext.Provider value={user}>
       {children}

@@ -6,6 +6,7 @@ import { useUser } from '@/context/UserProvider'
 import { useEffect, useState } from "react";
 import { Staff } from "@prisma/client";
 
+
 export default function HomePage() {
     const user = useUser()
     const [staffs, setStaff] = useState<Staff[]>()
@@ -29,7 +30,7 @@ export default function HomePage() {
                 <div className="bg-gradient-to-b from-[#C1D3E6] to-white to-65% rounded-b-3xl py-3 mb-3 -mx-4 px-5">
                     <div className="flex gap-3 h-10 items-center my-3">
                         <div className="w-10 h-10 rounded-3xl overflow-hidden">
-                            <img src="https://nextui.org/images/hero-card-complete.jpeg" className="w-full h-full object-cover object-center" />
+                            <img src="https://nextui.org/images/hero-card-complete.jpeg" className="w-full h-full object-cover object-center" alt="" width={100} height={100} />
                         </div>
                         <div className="flex flex-col text-black">
                             <h1 className="text-xs font-bold">Good Morning.</h1>
@@ -54,7 +55,7 @@ export default function HomePage() {
                                 <Link href={`/doctor/${data.id}`}>
                                     <CardBody className="overflow-visible py-2 grid grid-cols-7 gap-2 w-full h-24">
                                         <div className="col-span-2 overflow-hidden rounded-xl w-[80px] h-[80px]">
-                                            <img className="object-cover object-center w-full h-20" src="https://www.tidalhealth.org/sites/default/files/styles/physician_photo_focal_point_245x303_/public/site_media/2023-03/Zee-Ali-PA-C.jpg?h=da6474f4&itok=rvqkEs9F"  alt="Profile" />
+                                            <img className="object-cover object-center w-full h-20" src="https://www.tidalhealth.org/sites/default/files/styles/physician_photo_focal_point_245x303_/public/site_media/2023-03/Zee-Ali-PA-C.jpg?h=da6474f4&itok=rvqkEs9F"  alt="Profile" width={100} height={100} />
                                         </div>
                                         <div className="col-span-5 flex flex-col justify-between w-full text-black">
                                             <h1 className="text-lg uppercase font-bold">{data.firstname} {data.lastname}</h1>
