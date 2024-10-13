@@ -5,26 +5,34 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Pull the latest code
-                    git 'https://github.com/your-repo/care-track-project.git'
+                    // Clone repository
+                    git 'https://github.com/Chinjuku/CareTrack'
                 }
-                // Build the Docker image
-                sh 'docker-compose -f docker-compose.yml build'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // รัน unit tests หรือ linting เพื่อทดสอบโค้ด
-                sh 'npm run test'
+                // Build Docker images
+                sh 'npm run build'
             }
         }
 
         stage('Deploy') {
             steps {
-                // รัน docker-compose up เพื่อ deploy แอป
-                sh 'docker-compose -f docker-compose.yml up -d'
+                // Run Docker containers
+                sh 'docker-compose up -d --build'
             }
+        }
+    }
+
+    post {
+        always {
+            // Clean up workspace after build
+            cleanWs()
+        }
+        success {
+            // Notify when build succeeds
+            echo 'Build and Deploy succeeded!'
+        }
+        failure {
+            // Notify when build fails
+            echo 'Build or Deploy failed!'
         }
     }
 }
