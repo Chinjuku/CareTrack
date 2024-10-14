@@ -1,38 +1,51 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'node' // ใช้ชื่อที่คุณตั้งใน Jenkins
+    }
+
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
                 script {
-                    // Clone repository
-                    git 'https://github.com/Chinjuku/CareTrack'
+                    // Checkout code from Git repository
+                    checkout([$class: 'GitSCM',
+                              branches: [[name: "*/main"]],
+                              doGenerateSubmoduleConfigurations: false,
+                              extensions: [],
+                              userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Chinjuku/CareTrack.git"]]])
                 }
-                // Build Docker images
-                sh 'npm run build'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('care-track-project') {  // Navigate to your project folder
+                    // Check Node.js version
+                    sh 'node -v'
+
+                    // Install dependencies
+                    sh 'npm install'
+
+                    // Generate Prisma client
+                    sh 'npx prisma generate'
+
+                    // Build the Next.js app
+                    sh 'npm run build'
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                // Run Docker containers
-                sh 'docker-compose up -d --build'
+                dir('care-track-project') {  // Ensure Docker-compose is executed in the right directory
+                    // Run Docker containers
+                    sh 'docker-compose up -d --build'
+                }
             }
         }
     }
 
-    post {
-        always {
-            // Clean up workspace after build
-            cleanWs()
-        }
-        success {
-            // Notify when build succeeds
-            echo 'Build and Deploy succeeded!'
-        }
-        failure {
-            // Notify when build fails
-            echo 'Build or Deploy failed!'
-        }
-    }
 }
