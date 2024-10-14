@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Checkout code from Git repository
+                    // Checkout code from Git repositorys
                     checkout([$class: 'GitSCM',
                               branches: [[name: "*/main"]],
                               userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Chinjuku/CareTrack.git"]]])
