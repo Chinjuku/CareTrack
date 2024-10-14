@@ -1,5 +1,5 @@
 # Stage 1: Build the Next.js app
-FROM node:20 AS builder
+FROM node:18 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -23,7 +23,10 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Production image with only necessary files
-FROM node:20-buster AS runner
+FROM node:18-alpine AS runner
+
+# Install OpenSSL 3.0.x in the production image
+RUN apk add --no-cache openssl3
 
 # Set working directory
 WORKDIR /app
@@ -43,4 +46,4 @@ COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 3000
 
 # Start the Next.js app
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
