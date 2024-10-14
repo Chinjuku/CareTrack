@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'node' // Ensure you have a Node.js installation in Jenkins
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,12 +19,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('care-track-project') {  // Navigate to your project folder
-                    // Install dependencies and build the Next.js app
+                script {
+                    // Build and install dependencies using Docker
                     sh '''
-                        npm install
-                        npx prisma generate
-                        npm run build
+                        docker build -t care-track-project .
+                        docker run --rm -v $PWD:/app care-track-project npm install
+                        docker run --rm -v $PWD:/app care-track-project npx prisma generate
+                        docker run --rm -v $PWD:/app care-track-project npm run build
                     '''
                 }
             }
@@ -38,8 +43,7 @@ pipeline {
 
     post {
         always {
-            // Clean up workspace after build
-            cleanWs()
+            cleanWs()  // Clean up workspace after build
         }
         success {
             echo 'Build and Deploy succeeded!'
