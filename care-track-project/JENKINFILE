@@ -2,16 +2,18 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'node' // Use the Node.js installation you defined in Jenkins
+        nodejs 'node' // Ensure you have a Node.js 18 installation in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    // Checkout code from Git repositorys
+                    // Checkout code from Git repository
                     checkout([$class: 'GitSCM',
                               branches: [[name: "*/main"]],
+                              doGenerateSubmoduleConfigurations: false,
+                              extensions: [],
                               userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Chinjuku/CareTrack.git"]]])
                 }
             }
@@ -20,13 +22,17 @@ pipeline {
         stage('Build') {
             steps {
                 dir('care-track-project') {  // Navigate to your project folder
-                    // Install dependencies and build the Next.js app
-                    sh '''
-                        npm install
-                        ls prisma
-                        npx prisma generate
-                        npm run build
-                    '''
+                    // Check Node.js version
+                    sh 'node -v'
+
+                    // Install dependencies
+                    sh 'npm install'
+
+                    // Generate Prisma client
+                    sh 'npx prisma generate'
+
+                    // Build the Next.js app
+                    sh 'npm run build'
                 }
             }
         }
@@ -47,9 +53,11 @@ pipeline {
             cleanWs()
         }
         success {
+            // Notify when build succeeds
             echo 'Build and Deploy succeeded!'
         }
         failure {
+            // Notify when build fails
             echo 'Build or Deploy failed!'
         }
     }
