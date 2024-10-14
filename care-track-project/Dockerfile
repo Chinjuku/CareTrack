@@ -42,7 +42,7 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma/
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/node_modules ./node_modules
 
-# Expose the port Next.js runs on
+# Expose the port Next.js runs on a
 EXPOSE 3000
 
 # Start the Next.js app
