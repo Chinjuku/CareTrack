@@ -13,9 +13,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy prisma folder and generate Prisma client
+# Copy the Prisma schema file (to generate client)
 COPY prisma ./prisma/
-RUN ls ./prisma && npx prisma generate --schema=./prisma/schema.prisma
+
+# Generate Prisma client
+RUN npx prisma generate
 
 # Copy the rest of the application code
 COPY . .
@@ -26,23 +28,26 @@ RUN npm run build
 # Stage 2: Production image with only necessary files
 FROM node:22.9.0-alpine AS runner
 
+# Install OpenSSL 3.0.x in the production image if necessary
+RUN apk add --no-cache openssl3
+
 # Set working directory
 WORKDIR /app
 
+# Install specific npm version
+RUN npm install -g npm@10.8.3
 
+# Install only production dependencies
+COPY --from=builder /app/package*.json ./
+RUN npm install --production
 
-# Copy only the necessary files from the builder stage
+# Copy build files, ensuring destination directories are correct
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/prisma ./prisma/
 COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/package-lock.json ./
-COPY --from=builder /app/.next ./
-COPY --from=builder /app/node_modules ./node_modules
-
-# Install only production dependencies (ถ้าจำเป็น)
-# RUN npm install --production
 
 # Expose the port Next.js runs on
 EXPOSE 3000
 
 # Start the Next.js app
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

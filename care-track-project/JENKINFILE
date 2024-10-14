@@ -24,7 +24,7 @@ pipeline {
                     sh '''
                         npm install
                         ls prisma
-                        npx prisma generate --schema=./prisma/schema.prisma
+                        npx prisma generate
                         npm run build
                     '''
                 }
