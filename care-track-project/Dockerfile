@@ -29,6 +29,8 @@ FROM node:22.9.0-alpine AS runner
 # Set working directory
 WORKDIR /app
 
+
+
 # Copy only the necessary files from the builder stage
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/package.json ./
@@ -43,4 +45,4 @@ COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 3000
 
 # Start the Next.js app
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
