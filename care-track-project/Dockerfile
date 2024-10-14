@@ -4,6 +4,9 @@ FROM node:22.9.0 AS builder
 # Set working directory
 WORKDIR /app
 
+# Install specific npm version
+RUN npm install -g npm@10.8.3
+
 # Copy package.json and package-lock.json for caching dependencies
 COPY package*.json ./
 
@@ -25,11 +28,14 @@ RUN npm run build
 # Stage 2: Production image with only necessary files
 FROM node:22.9.0-alpine AS runner
 
-# Install OpenSSL 3.0.x in the production image
+# Install OpenSSL 3.0.x in the production image if necessary
 RUN apk add --no-cache openssl3
 
 # Set working directory
 WORKDIR /app
+
+# Install specific npm version
+RUN npm install -g npm@10.8.3
 
 # Install only production dependencies
 COPY --from=builder /app/package*.json ./
@@ -38,11 +44,9 @@ RUN npm install --production
 # Copy build files, ensuring destination directories are correct
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/prisma ./prisma/
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma/
 COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/node_modules ./node_modules
 
-# Expose the port Next.js runs onasd
+# Expose the port Next.js runs on
 EXPOSE 3000
 
 # Start the Next.js app
