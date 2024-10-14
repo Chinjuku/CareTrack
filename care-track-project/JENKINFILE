@@ -9,7 +9,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Checkout code from Git repository
                     checkout([$class: 'GitSCM',
                               branches: [[name: "*/main"]],
                               userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Chinjuku/CareTrack.git"]]])
@@ -23,6 +22,7 @@ pipeline {
                     // Install dependencies and build the Next.js app
                     sh '''
                         npm install
+                        npm audit fix --force
                         ls prisma
                         npx prisma generate --schema=./prisma/schema.prisma
                         npm run build
@@ -43,7 +43,6 @@ pipeline {
 
     post {
         always {
-            // Clean up workspace after build
             cleanWs()
         }
         success {

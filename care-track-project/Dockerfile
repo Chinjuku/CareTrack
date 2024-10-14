@@ -30,7 +30,7 @@ FROM node:22.9.0-alpine AS runner
 WORKDIR /app
 
 # Copy only the necessary files from the builder stage
-COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
 COPY --from=builder /app/.next ./
