@@ -26,7 +26,7 @@ RUN npm run build
 FROM node:20-alpine AS runner
 
 # Install OpenSSL 3.0.x in the production image
-# RUN apk add --no-cache openssl3
+RUN apk add --no-cache openssl3
 
 # Set working directory
 WORKDIR /app
