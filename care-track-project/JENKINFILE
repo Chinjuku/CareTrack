@@ -15,7 +15,7 @@ pipeline {
                               branches: [[name: "*/main"]],
                               doGenerateSubmoduleConfigurations: false,
                               extensions: [],
-                              userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Chinjuku/CareTrack.git"]]])
+                              userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Meanwhil3/test-iss.git"]]])
                 }
             }
         }
@@ -44,6 +44,21 @@ pipeline {
                     // Run Docker containers
                     sh 'docker-compose up -d --build'
                 }
+            }
+        }
+
+        post {
+            always {
+                // Clean up workspace after build
+                cleanWs()
+            }
+            success {
+                // Notify when build succeeds
+                echo 'Build and Deploy succeeded!'
+            }
+            failure {
+                // Notify when build fails
+                echo 'Build or Deploy failed!'
             }
         }
     }
