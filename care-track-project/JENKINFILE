@@ -1,47 +1,53 @@
 pipeline {
     agent any
-
-    tools {
-        nodejs 'node' // Ensure you have a Node.js 18 installation in Jenkins
+    environment {
+        DOCKER_IMAGE       = 'Ionelyxd/project-app:latest' 
+        DOCKER_CREDENTIALS = credentials('dockerhub')
     }
 
     stages {
-        stage('Checkout') {
+        stage('Start Jenkins') {
+            steps {
+                sh 'echo Start Jenkins............'
+                sh 'echo docker : user = $DOCKER_CREDENTIALS_USR : password = $DOCKER_CREDENTIALS_PSW'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('./') { 
+                    sh 'echo "Running in $(pwd)"'
+                    sh 'echo start building the Docker image = $DOCKER_IMAGE'
+                    sh 'docker build -t $DOCKER_IMAGE .'
+                }   
+            }
+        }
+
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Checkout code from Git repository
-                    checkout([$class: 'GitSCM',
-                              branches: [[name: "*/main"]],
-                              doGenerateSubmoduleConfigurations: false,
-                              extensions: [],
-                              userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Chinjuku/CareTrack.git"]]])
+                    sh 'echo $DOCKER_CREDENTIALS_PSW | docker login --username $DOCKER_CREDENTIALS_USR --password-stdin'
+                    sh 'docker push $DOCKER_IMAGE'
                 }
             }
         }
 
-        stage('Build') {
+        stage('Clear Docker Components') {
             steps {
-                dir('care-track-project') {  // Navigate to your project folder
-                    // Check Node.js version
-                    sh 'node -v'
-
-                    // Install dependencies
-                    sh 'npm install'
-
-                    // Generate Prisma client
-                    sh 'npx prisma generate'
-
-                    // Build the Next.js app
-                    sh 'npm run build'
+                script {
+                    sh 'docker stop $(docker ps -a -q) || true'  
+                    sh 'docker rm $(docker ps -a -q) || true' 
+                    sh 'docker rmi $(docker images -q) || true'
+                    sh 'docker system prune -af'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                dir('care-track-project') {  // Ensure Docker-compose is executed in the right directory
-                    // Run Docker containers
-                    sh 'docker-compose up -d --build'
+                script {
+                    sh 'docker pull $DOCKER_IMAGE'
+                    sh 'docker run -d --name project-app -p 8085:80 $DOCKER_IMAGE'
                 }
             }
         }
@@ -49,16 +55,7 @@ pipeline {
 
     post {
         always {
-            // Clean up workspace after build
-            cleanWs()
-        }
-        success {
-            // Notify when build succeeds
-            echo 'Build and Deploy succeeded!'
-        }
-        failure {
-            // Notify when build fails
-            echo 'Build or Deploy failed!'
+            sh 'docker logout'
         }
     }
 }
