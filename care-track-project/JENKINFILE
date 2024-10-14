@@ -1,18 +1,14 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE       = 'Ionelyxd/project-app:latest' 
-        DOCKER_CREDENTIALS = credentials('dockerhub')
+        DOCKER_IMAGE = 'project-app:latest'  // Use a local image name without the repository
     }
 
     stages {
         stage('Start Jenkins') {
             steps {
                 script {
-                    node {
-                        sh 'echo Start Jenkins............'
-                        sh 'echo docker : user = $DOCKER_CREDENTIALS_USR : password = $DOCKER_CREDENTIALS_PSW'
-                    }
+                    sh 'echo Start Jenkins............'
                 }
             }
         }
@@ -20,36 +16,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    node {
-                        dir('./') { 
-                            sh 'echo "Running in $(pwd)"'
-                            sh 'echo start building the Docker image = $DOCKER_IMAGE'
-                            sh 'docker build -t $DOCKER_IMAGE .'
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    node {
-                        sh 'echo $DOCKER_CREDENTIALS_PSW | docker login --username $DOCKER_CREDENTIALS_USR --password-stdin'
-                        sh 'docker push $DOCKER_IMAGE'
-                    }
-                }
-            }
-        }
-
-        stage('Clear Docker Components') {
-            steps {
-                script {
-                    node {
-                        sh 'docker stop $(docker ps -a -q) || true'  
-                        sh 'docker rm $(docker ps -a -q) || true' 
-                        sh 'docker rmi $(docker images -q) || true'
-                        sh 'docker system prune -af'
+                    dir('./') { 
+                        sh 'echo "Running in $(pwd)"'
+                        sh 'echo start building the Docker image = $DOCKER_IMAGE'
+                        sh 'docker build -t $DOCKER_IMAGE .'
                     }
                 }
             }
@@ -58,10 +28,18 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    node {
-                        sh 'docker pull $DOCKER_IMAGE'
-                        sh 'docker run -d --name project-app -p 8085:80 $DOCKER_IMAGE'
-                    }
+                    sh 'docker run -d --name project-app -p 8085:3000 $DOCKER_IMAGE' // Ensure the port mapping is correct
+                }
+            }
+        }
+
+        stage('Clear Docker Components') {
+            steps {
+                script {
+                    sh 'docker stop project-app || true'  
+                    sh 'docker rm project-app || true' 
+                    sh 'docker rmi $DOCKER_IMAGE || true'  // Remove the local image if needed
+                    sh 'docker system prune -af'  // Cleanup unused Docker resources
                 }
             }
         }
@@ -70,9 +48,7 @@ pipeline {
     post {
         always {
             script {
-                node {
-                    sh 'docker logout'
-                }
+                sh 'echo Cleaning up Docker resources...'
             }
         }
     }
