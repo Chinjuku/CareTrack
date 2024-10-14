@@ -42,5 +42,5 @@ COPY --from=builder /app/node_modules ./node_modules
 # Expose the port Next.js runs on
 EXPOSE 3000
 
-# Start the Next.js app
+# Start the Next.js app hi
 CMD ["npm", "run", "start"]
