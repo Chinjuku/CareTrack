@@ -45,4 +45,4 @@ COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 3000
 
 # Start the Next.js app
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
