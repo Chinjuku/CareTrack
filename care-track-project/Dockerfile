@@ -25,6 +25,9 @@ RUN npm run build
 # Stage 2: Production image with only necessary files
 FROM node:20-alpine AS runner
 
+# Install OpenSSL 3.0.x in the production image
+RUN apk add --no-cache openssl3
+
 # Set working directory
 WORKDIR /app
 
@@ -42,5 +45,5 @@ COPY --from=builder /app/node_modules ./node_modules
 # Expose the port Next.js runs on
 EXPOSE 3000
 
-# Start the Next.js app hi
+# Start the Next.js app
 CMD ["npm", "run", "start"]
