@@ -25,7 +25,7 @@ RUN npm run build
 # Stage 2: Production image with only necessary files
 FROM node:20-alpine AS runner
 
-# Install OpenSSL 3.0.x in the production image
+# Install OpenSSL 3.0.x in the production images
 RUN apk add --no-cache openssl3
 
 # Set working directory
