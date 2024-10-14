@@ -34,12 +34,13 @@ COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
 COPY --from=builder /app/.next ./
+COPY --from=builder /app/node_modules ./node_modules
 
-# Install only production dependencies
-RUN npm install --production
+# Install only production dependencies (ถ้าจำเป็น)
+# RUN npm install --production
 
 # Expose the port Next.js runs on
 EXPOSE 3000
 
 # Start the Next.js app
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
