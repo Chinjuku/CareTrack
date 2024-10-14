@@ -1,45 +1,40 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_IMAGE = 'project-app:latest'  // Use a local image name without the repository
+
+    tools {
+        nodejs 'node' // Ensure you have a Node.js installation in Jenkins
     }
 
     stages {
-        stage('Start Jenkins') {
+        stage('Checkout') {
             steps {
                 script {
-                    sh 'echo Start Jenkins............'
+                    // Checkout code from Git repository
+                    checkout([$class: 'GitSCM',
+                              branches: [[name: "*/main"]],
+                              userRemoteConfigs: [[credentialsId: 'github', url: "https://github.com/Chinjuku/CareTrack.git"]]])
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
-                script {
-                    dir('./') { 
-                        sh 'echo "Running in $(pwd)"'
-                        sh 'echo start building the Docker image = $DOCKER_IMAGE'
-                        sh 'docker build -t $DOCKER_IMAGE .'
-                    }
+                dir('care-track-project') {  // Navigate to your project folder
+                    // Install dependencies and build the Next.js app
+                    sh '''
+                        npm install
+                        npx prisma generate
+                        npm run build
+                    '''
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    sh 'docker run -d --name project-app -p 8085:3000 $DOCKER_IMAGE' // Ensure the port mapping is correct
-                }
-            }
-        }
-
-        stage('Clear Docker Components') {
-            steps {
-                script {
-                    sh 'docker stop project-app || true'  
-                    sh 'docker rm project-app || true' 
-                    sh 'docker rmi $DOCKER_IMAGE || true'  // Remove the local image if needed
-                    sh 'docker system prune -af'  // Cleanup unused Docker resources
+                dir('care-track-project') {  // Ensure Docker-compose is executed in the right directory
+                    // Run Docker containers
+                    sh 'docker-compose up -d --build'
                 }
             }
         }
@@ -47,9 +42,14 @@ pipeline {
 
     post {
         always {
-            script {
-                sh 'echo Cleaning up Docker resources...'
-            }
+            // Clean up workspace after build
+            cleanWs()
+        }
+        success {
+            echo 'Build and Deploy succeeded!'
+        }
+        failure {
+            echo 'Build or Deploy failed!'
         }
     }
 }
