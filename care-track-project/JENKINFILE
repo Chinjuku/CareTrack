@@ -2,13 +2,14 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'node' // ใช้ Node.js 22.x
+        nodejs 'node' // Ensure you have a Node.js 18 installation in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
+                    // Checkout code from Git repository
                     checkout([$class: 'GitSCM',
                               branches: [[name: "*/main"]],
                               doGenerateSubmoduleConfigurations: false,
@@ -20,10 +21,17 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('care-track-project') {
+                dir('care-track-project') {  // Navigate to your project folder
+                    // Check Node.js version
                     sh 'node -v'
+
+                    // Install dependencies
                     sh 'npm install'
+
+                    // Generate Prisma client
                     sh 'npx prisma generate'
+
+                    // Build the Next.js app
                     sh 'npm run build'
                 }
             }
@@ -31,7 +39,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir('care-track-project') {
+                dir('care-track-project') {  // Ensure Docker-compose is executed in the right directory
+                    // Run Docker containers
                     sh 'docker-compose up -d --build'
                 }
             }
@@ -40,12 +49,15 @@ pipeline {
 
     post {
         always {
+            // Clean up workspace after build
             cleanWs()
         }
         success {
+            // Notify when build succeeds
             echo 'Build and Deploy succeeded!'
         }
         failure {
+            // Notify when build fails
             echo 'Build or Deploy failed!'
         }
     }
