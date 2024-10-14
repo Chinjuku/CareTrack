@@ -10,8 +10,12 @@ RUN npm install -g npm@10.8.3
 # Copy package.json and package-lock.json for caching dependencies
 COPY package*.json ./
 
-# Install dependencies and generate Prisma client
-RUN npm install && npx prisma generate
+# Install dependencies
+RUN npm install
+
+# Copy prisma folder and generate Prisma client
+COPY prisma ./prisma/
+RUN ls ./prisma && npx prisma generate --schema=./prisma/schema.prisma
 
 # Copy the rest of the application code
 COPY . .
