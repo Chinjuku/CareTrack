@@ -39,7 +39,7 @@ RUN npm install -g npm@10.8.3
 
 # Install only production dependencies
 COPY --from=builder /app/package*.json ./
-RUN npm install --production
+RUN npm install --omit=dev
 
 # Copy build files, ensuring destination directories are correct
 COPY --from=builder /app/.next ./.next
