@@ -46,6 +46,9 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/prisma ./prisma/
 COPY --from=builder /app/next.config.mjs ./
 
+# Generate Prisma client in production stage as well
+RUN npx prisma generate
+
 # Expose the port Next.js runs on
 EXPOSE 3000
 
